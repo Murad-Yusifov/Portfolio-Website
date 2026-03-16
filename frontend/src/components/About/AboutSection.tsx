@@ -1,7 +1,9 @@
+import ProjectCart from "../Projects/ProjectCart";
+
 const AboutSection = () => {
   return (
     <div className=' '>
-       AboutSection
+       <ProjectCart/>
     </div>
   );
 };

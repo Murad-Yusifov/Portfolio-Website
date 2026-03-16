@@ -77,4 +77,7 @@ Portfolio Website
 
 Starts with React + TypeScript + Tailwind css
 
+The teachnologies that used in the project:
+Tanstack React Query, React router dom data mode, custom hooks (auto fetching data and local storage for the language and the theme)
+
   
