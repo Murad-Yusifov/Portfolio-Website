@@ -1,10 +1,12 @@
 import express, { Router } from "express"
-import { addData, deleteData, formData, putForm } from "../controllers/formController.js";
+import { addData, deleteData, formData, getSingleData, putForm } from "../controllers/formController.js";
 
 const route = express.Router()
 
 route.
 get("/formData", formData)
+route.
+get("/formData/:id", getSingleData)
 route.
 post("/formData", addData)
 route.

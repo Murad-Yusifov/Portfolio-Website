@@ -2,7 +2,7 @@ import React, { createContext, useState } from "react";
 
 export interface ThemeType {
   theme: string;
-  changeTheme: (themed: string | undefined) => void;
+  changeTheme: (themed: string) => void;
 }
 const ThemeContext = createContext<ThemeType | null>(null);
 
@@ -13,7 +13,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   }
   );
 
-  const changeTheme = (themed: string | undefined) => {
+  const changeTheme = (themed: string ) => {
     setTheme(() => {
       const newTheme = themed || "dark";
       localStorage.setItem("theme", String(newTheme));

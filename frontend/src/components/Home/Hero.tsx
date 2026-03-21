@@ -12,7 +12,7 @@ const Hero: React.FC = () => {
 
   return (
     <section
-      id="home"
+      id="landing"
       className={`w-full min-h-[80vh] flex items-center justify-center px-6 py-12 transition-colors duration-300 ${bgColor}`}
     >
       <div className="max-w-6xl w-full grid gap-10 lg:grid-cols-2 items-center">

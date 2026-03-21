@@ -1,11 +1,12 @@
+import type { DataType, ProjectCartProps } from "../../lib/data";
 import ProjectCart from "../Projects/ProjectCart";
 
-const AboutSection = () => {
+const AboutSection = ({ data }: ProjectCartProps) => {
   return (
-    <div className=' '>
-       <ProjectCart/>
-    </div>
+    <section id="experience">
+      {data && data.map((item:DataType)=> <ProjectCart data={item} />)}
+    </section>
   );
 };
 
-export default  AboutSection;
+export default AboutSection;

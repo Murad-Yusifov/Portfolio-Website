@@ -1,20 +1,26 @@
 import { useFormik, FieldArray, FormikProvider } from "formik";
 import * as Yup from "yup";
-import { postData, putData } from "../../Utils/api";
+import { postDataApi } from "../../Utils/api";
 import Button from "../common/Button";
 import { useTheme } from "../../hooks/useTheme";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../../redux/store";
+import { putData } from "../../redux/reducers/dataReducer";
 
 interface Project {
   name: string;
   tech: string[];
 }
 
-interface ExperienceInfo {
-  company: string;
+ interface ExperienceInfo {
+  currentCompany: string;
   role: string;
+  projectsCompleted: number;
+  remote: boolean;
 }
 
 interface FormType {
+  id?:number,
   skills: string[];
   experience: string;
   experienceInfo: ExperienceInfo;
@@ -22,7 +28,7 @@ interface FormType {
 }
 
 interface ProjectFormProps {
-  endpoint?: string | null;
+  endpoint?: number | null;
   initialData?: FormType;
 }
 
@@ -33,6 +39,8 @@ const ProjectForm = ({ endpoint = null, initialData }: ProjectFormProps) => {
   const textColor = theme === "light" ? "text-black" : "text-white";
   const inputBg = theme === "light" ? "bg-white" : "bg-neutral-900";
   const borderColor = theme === "light" ? "border-gray-300" : "border-neutral-700";
+
+  const dispatch = useDispatch<AppDispatch>()
 
   const validationSchema = Yup.object({
     skills: Yup.array().of(Yup.string().required("Required")).min(1, "Add at least 1 skill"),
@@ -53,7 +61,7 @@ const ProjectForm = ({ endpoint = null, initialData }: ProjectFormProps) => {
   initialValues: initialData || {
     skills: [],
     experience: "",
-    experienceInfo: { company: "", role: "" },
+    experienceInfo: { currentCompany: "", role: "",projectsCompleted:0, remote:false },
     projects: [{ name: "", tech: [""] }],
   },
   enableReinitialize: true,
@@ -62,11 +70,11 @@ const ProjectForm = ({ endpoint = null, initialData }: ProjectFormProps) => {
     try {
       if (endpoint) {
         // Update existing record
-        await putData<FormType, undefined>(endpoint, values);
+        await dispatch(putData({id:endpoint, data:values}))
         alert("Form updated successfully!");
       } else {
         // Create new record
-        await postData<FormType, undefined>(values);
+        await postDataApi<FormType, undefined>(values);
         alert("Form submitted successfully!");
         formik.resetForm(); // optional: clear the form after submit
       }
@@ -103,7 +111,7 @@ const ProjectForm = ({ endpoint = null, initialData }: ProjectFormProps) => {
                       <button
                         type="button"
                         onClick={() => arrayHelpers.remove(index)}
-                        className="px-2 bg-red-500 text-white rounded"
+                        className="w-12 text-sm bg-red-500 text-white rounded"
                       >
                         Remove
                       </button>
@@ -112,7 +120,7 @@ const ProjectForm = ({ endpoint = null, initialData }: ProjectFormProps) => {
                   <button
                     type="button"
                     onClick={() => arrayHelpers.push("")}
-                    className="px-3 py-1 bg-blue-500 text-white rounded mt-1"
+                    className="w-24 py-1 bg-blue-500 text-white rounded mt-1"
                   >
                     Add Skill
                   </button>
@@ -138,7 +146,7 @@ const ProjectForm = ({ endpoint = null, initialData }: ProjectFormProps) => {
             <input
               placeholder="Company"
               type="text"
-              value={formik.values.experienceInfo.company}
+              value={formik.values.experienceInfo.currentCompany}
               onChange={(e) => formik.setFieldValue("experienceInfo.company", e.target.value)}
               className={`p-2 rounded-md border ${borderColor} ${inputBg}`}
             />
@@ -220,7 +228,7 @@ const ProjectForm = ({ endpoint = null, initialData }: ProjectFormProps) => {
                   <button
                     type="button"
                     onClick={() => arrayHelpers.push({ name: "", tech: [""] })}
-                    className="px-3 py-1 bg-blue-600 text-white rounded mt-2"
+                    className="w-24 text-sm py-1 bg-blue-600 text-white rounded mt-2"
                   >
                     Add Project
                   </button>

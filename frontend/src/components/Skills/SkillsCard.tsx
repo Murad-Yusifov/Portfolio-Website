@@ -1,24 +1,14 @@
 import { useTheme } from "../../hooks/useTheme";
-import { exampleData } from "../../lib/data";
-
-interface Skill {
-  name: string;
-}
+import { type DataType } from "../../lib/data";
 
 interface SkillsCardProps {
-  data?: Skill[]; // flat array
+  data?: DataType[] | null; // array of objects
 }
 
-// Convert all strings into Skill objects
-const skill: Skill[] = exampleData.flatMap((item) =>
-  item.skills.map((s) => ({ name: s }))
-);
-
-const SkillsCard = ({ data = skill }: SkillsCardProps) => {
+const SkillsCard = ({ data }: SkillsCardProps) => {
   const { theme } = useTheme();
 
   const bgColor = theme === "light" ? "bg-white" : "bg-black";
-
   const cardBg =
     theme === "light"
       ? "bg-white border border-gray-200"
@@ -31,23 +21,22 @@ const SkillsCard = ({ data = skill }: SkillsCardProps) => {
 
   return (
     <section id="skills" className={`${bgColor} py-4 px-2 border-t-2 border-gray-100`}>
-
-    <div
-      className={`w-1/4 p-6 rounded-2xl ${cardBg} transition-colors duration-300 border-2`}
-    >
-      <h2 className={`text-xl font-semibold mb-4 ${textColor}`}>Skills</h2>
-      <div className="flex flex-wrap gap-3">
-        {data.map((skill, idx) => (
-          <div
-            key={idx}
-            className={`px-4 py-2 rounded-lg ${badgeBg} text-sm font-medium`}
-            >
-            {skill.name}
-          </div>
-        ))}
+      <div className={`w-1/4 p-6 rounded-2xl ${cardBg} transition-colors duration-300 border-2`}>
+        <h2 className={`text-xl font-semibold mb-4 ${textColor}`}>Skills</h2>
+        <div className="flex flex-wrap gap-3">
+          {(data || []).map((item) =>
+            (item.skills || []).map((skill) => (
+              <div
+                key={`${item.id}-${skill}`}
+                className={`px-4 py-2 rounded-lg ${badgeBg} text-sm font-medium`}
+              >
+                {skill}
+              </div>
+            ))
+          )}
+        </div>
       </div>
-    </div>
-        </section>
+    </section>
   );
 };
 

@@ -1,7 +1,8 @@
 export interface ApiResponse<T> {
   data: T;
-  message: string;
-  status: number;
+  message:string,
+  status:number,
+ success?: boolean
 }
 
 export interface ApiError {
@@ -30,7 +31,7 @@ const handleError = async (error: ApiError): Promise<void> => {
 };
 
 // GET
-export const getData = async <T>(endpoint: string): Promise<ApiResponse<T>> => {
+export const getSingleDataApi = async <T>(endpoint: number): Promise<ApiResponse<T>> => {
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`);
     return handleResponse<T>(response);
@@ -40,8 +41,19 @@ export const getData = async <T>(endpoint: string): Promise<ApiResponse<T>> => {
   }
 };
 
+export const getDataApi = async <T>(): Promise<ApiResponse<T>> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}`);
+    return await handleResponse<T>(response); // assuming handleResponse returns T
+  } catch (err: unknown) {
+    handleError(err as ApiError);
+    console.log(err);
+    throw err; // ensures function always returns something
+  }
+};
+
 // POST (send full backend schema)
-export const postData = async <T, U>(data: T): Promise<ApiResponse<U>> => {
+export const postDataApi = async <T, U>(data: T): Promise<ApiResponse<U>> => {
   try {
     const response = await fetch(`${API_BASE_URL}`, {
       method: "POST",
@@ -56,7 +68,7 @@ export const postData = async <T, U>(data: T): Promise<ApiResponse<U>> => {
 };
 
 // PUT (update existing data by ID)
-export const putData = async <T, U>(endpoint: string | null, data: T): Promise<ApiResponse<U>> => {
+export const putDataApi = async <T, U>(endpoint: number, data: T): Promise<ApiResponse<U>> => {
   if (!endpoint) throw new Error("PUT endpoint cannot be null");
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
@@ -72,7 +84,7 @@ export const putData = async <T, U>(endpoint: string | null, data: T): Promise<A
 };
 
 // DELETE
-export const deleteData = async <T>(endpoint: string): Promise<ApiResponse<T>> => {
+export const deleteDataApi = async <T>(endpoint: number): Promise<ApiResponse<T>> => {
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, { method: "DELETE" });
     return handleResponse<T>(response);

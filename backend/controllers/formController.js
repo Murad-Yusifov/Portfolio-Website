@@ -26,6 +26,23 @@ export const formData = async (req, res) => {
   }
 };
 
+export const getSingleData = async (req, res) => {
+  try {
+    const { id } = req.params; // destructure the id from params
+    const data = await Form.findById(id);
+
+    if (!data) {
+      return res.status(404).json({ message: "Data not found" });
+    }
+
+    res.json(data);
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
 export const putForm = async (req, res) => {
   try {
     const {id} = req.params;

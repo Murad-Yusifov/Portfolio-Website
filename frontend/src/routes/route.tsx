@@ -6,6 +6,7 @@ import AdminPanel from "../pages/AdminPanel";
 import NotFound from "../pages/NotFound";
 import ProjectPage from "../pages/ProjectPage";
 
+
 const routes: RouteObject[] = [
   {
     path: "/",
@@ -13,6 +14,7 @@ const routes: RouteObject[] = [
     children: [
       { index: true, element: <Home /> },
       { path: "admin", element: <AdminPanel /> },
+      { path: "admin/:id", element: <AdminPanel /> },
       { path: "project/:id", element: <ProjectPage /> },
     ],
   },
